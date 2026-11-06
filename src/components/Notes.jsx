@@ -2,23 +2,27 @@ import { useState } from 'react'
 import NoteCard from './NoteCard.jsx'
 
 function Notes() {
-  const [notes] = useState([
-    {
-      id: 1,
-      title: 'Review map and filter',
-      body: 'Redo the TodoMVC steps without looking at the guide.',
-    },
-    {
-      id: 2,
-      title: 'Prepare for the quiz',
-      body: 'Practice writing one handler for many inputs.',
-    },
+  const [notes, setNotes] = useState([
+    { id: 1, title: 'Review map and filter', body: 'Redo the TodoMVC steps without looking at the guide.' },
+    { id: 2, title: 'Prepare for the quiz', body: 'Practice writing one handler for many inputs.' },
   ])
 
   const [form, setForm] = useState({ title: '', body: '' })
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    const title = form.title.trim()
+    const body = form.body.trim()
+    if (title === '' || body === '') {
+      return
+    }
+    const newNote = { id: crypto.randomUUID(), title, body }
+    setNotes([...notes, newNote])
+    setForm({ title: '', body: '' })
   }
 
   return (
@@ -38,7 +42,7 @@ function Notes() {
           />
         </div>
 
-        <form className="grid gap-3">
+        <form onSubmit={handleSubmit} className="grid gap-3">
           <p className="text-[13px] font-normal tracking-wide text-[#949494]">
             NEW NOTE
           </p>
